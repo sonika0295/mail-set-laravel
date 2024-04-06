@@ -129,4 +129,42 @@ class HomeController extends Controller
             return response()->json(['error' => 'Failed to resend code'], 500);
         }
     }
+
+
+    public function login()
+    {
+        return view('pages.login');
+    }
+
+    public function loginSubmit(Request $request)
+    {
+        try {
+            $validator = Validator::make($request->all(), [
+                'email' => 'required|email|exists:users,email',
+                'password' => 'required',
+            ]);
+
+            if ($validator->fails()) {
+                return back()->withErrors($validator)->withInput($request->except('password'));
+            }
+
+            $credentials = $request->only('email', 'password');
+
+            if (Auth::attempt($credentials)) {
+                $user = Auth::user();
+
+                if (!$user->email_verified_at) {
+                    Auth::logout();
+                    return redirect()->route('login')->with('error', 'Email not verified. Please check your email for verification instructions.');
+                }
+
+                return redirect()->route('home');
+            }
+
+            return redirect()->route('login')->with('error', 'Invalid credentials. Please try again.')->withInput($request->except('password'));
+        } catch (Exception $e) {
+            return back()
+                ->with(['error' => $e->getMessage()]);
+        }
+    }
 }

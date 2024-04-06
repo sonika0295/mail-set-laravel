@@ -25,7 +25,7 @@ if (session()->has('user_info')) {
             @if (session()->has('user_info'))
                 <a href="{{ route('logout') }}">Logout</a>
             @else
-                <a href="{{ route('sign_in') }}">Sign In</a>
+                <a href="{{ route('login') }}">Sign In</a>
                 <a href="{{ route('signup') }}">Register</a>
             @endif
         </div>
