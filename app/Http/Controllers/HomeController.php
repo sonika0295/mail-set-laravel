@@ -8,6 +8,11 @@ use Exception;
 use Illuminate\Support\Facades\Session;
 use App\Models\User;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Hash;
+use App\Mail\EmailVerification;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Crypt;
 
 class HomeController extends Controller
 {
@@ -39,24 +44,71 @@ class HomeController extends Controller
                 return back()->withErrors($validator)->withInput($request->except('password'));
             }
 
+
             $user = new User();
             $user->name = $request->name;
             $user->email = $request->email;
-            $user->password = bcrypt($request->password);
+            $user->password = Hash::make($request->password);;
             $user->phone_number = $request->phone_number;
             $user->card_information = $request->card_information;
+            $user->verification_code = rand(1000, 9999);
             $user->address = $request->address;
 
             $user->save();
 
+            $encryptedUserId = Crypt::encrypt($user->id);
+            Mail::to('sonikakurmi48@gmail.com')->send(new EmailVerification($user));
+
+            return redirect()->route('email.verify.form', ['user_id' => $encryptedUserId]);
+
             return back()->with(['success' => 'User created successfully']);
         } catch (Exception $e) {
             return back()
-                ->withErrors(['error' => $e->getMessage()])
+                ->with(['error' => $e->getMessage()])
                 ->withInput($request->except('password'));
+        }
+    }
 
-            // return back()->with(['error' => $e->getMessage()])->withErrors();
-            // return back()->with(['error' => $e->getMessage()]);
+    public function emailVerifyForm($user_id)
+    {
+        try {
+            $userId = Crypt::decrypt($user_id);
+            $user = User::findOrFail($userId);
+            return view('pages.email-verify', ['user' => $user]);
+        } catch (Exception $e) {
+            return redirect()->route('signup')->with(['error' => 'Invalid verification link']);
+        }
+    }
+
+
+
+    public function emailVerify(Request $request)
+    {
+        try {
+            $validator = Validator::make($request->all(), [
+                'verification_code' => 'required|string',
+                'user_id' => 'required'
+            ]);
+
+            if ($validator->fails()) {
+                return back()->withErrors($validator);
+            }
+
+
+            // $userId = Crypt::decrypt($request->user_id);
+            $userId = $request->user_id;
+            $user = User::findOrFail($userId);
+
+            if ($user->verification_code != $request->verification_code) {
+                return back()->withErrors(['verification_code' => 'Invalid verification code']);
+            }
+
+            $user->email_verified_at = now();
+            $user->save();
+
+            return redirect()->route('home')->with('success', 'Email verified successfully!');
+        } catch (Exception $e) {
+            return back()->with(['error' => $e->getMessage()]);
         }
     }
 }

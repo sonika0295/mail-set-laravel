@@ -18,7 +18,13 @@ Route::get('/clear-cache', function () {
 
 Route::get('/', [HomeController::class, 'home'])->name('home');
 Route::get('/signup', [HomeController::class, 'signup'])->name('signup');
+
+
 Route::post('/signup', [HomeController::class, 'signupSubmit'])->name('signup.submit');
+Route::get('/email-verify/{user_id}', [HomeController::class, 'emailVerifyForm'])->name('email.verify.form');
+Route::post('/email/verify', [HomeController::class, 'emailVerify'])->name('email.verify');
+
+
 
 Route::get('/buy', [HomeController::class, 'home'])->name('buy');
 Route::get('/sell', [HomeController::class, 'home'])->name('sell');
