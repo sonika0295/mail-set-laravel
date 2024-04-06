@@ -57,7 +57,7 @@ class HomeController extends Controller
             $user->save();
 
             $encryptedUserId = Crypt::encrypt($user->id);
-            Mail::to('sonikakurmi48@gmail.com')->send(new EmailVerification($user));
+            Mail::to($user->email)->send(new EmailVerification($user));
 
             return redirect()->route('email.verify.form', ['user_id' => $encryptedUserId]);
 
@@ -94,9 +94,7 @@ class HomeController extends Controller
                 return back()->withErrors($validator);
             }
 
-
-            // $userId = Crypt::decrypt($request->user_id);
-            $userId = $request->user_id;
+            $userId = decrypt($request->user_id);
             $user = User::findOrFail($userId);
 
             if ($user->verification_code != $request->verification_code) {
@@ -109,6 +107,26 @@ class HomeController extends Controller
             return redirect()->route('home')->with('success', 'Email verified successfully!');
         } catch (Exception $e) {
             return back()->with(['error' => $e->getMessage()]);
+        }
+    }
+
+
+    public function resend(Request $request)
+    {
+        try {
+            $userId = decrypt($request->user_id);
+            $user = User::findOrFail($userId);
+
+            // Generate a new verification code
+            $user->verification_code = rand(1000, 9999);
+            $user->save();
+
+            // Send the verification email
+            Mail::to($user->email)->send(new EmailVerification($user));
+
+            return response()->json(['message' => 'Code resent successfully'], 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Failed to resend code'], 500);
         }
     }
 }

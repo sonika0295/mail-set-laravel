@@ -23,6 +23,7 @@ Route::get('/signup', [HomeController::class, 'signup'])->name('signup');
 Route::post('/signup', [HomeController::class, 'signupSubmit'])->name('signup.submit');
 Route::get('/email-verify/{user_id}', [HomeController::class, 'emailVerifyForm'])->name('email.verify.form');
 Route::post('/email/verify', [HomeController::class, 'emailVerify'])->name('email.verify');
+Route::post('/email/resend', [HomeController::class, 'resend'])->name('email.resend');
 
 
 
