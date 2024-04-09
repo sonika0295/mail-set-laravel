@@ -16,155 +16,84 @@ use Illuminate\Support\Facades\Crypt;
 
 class HomeController extends Controller
 {
-    public function home()
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
     {
+    }
+
+    /**
+     * Show the application dashboard.
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function index()
+    {
+       
         return view('pages.home');
     }
 
-
-    public function signup()
+    public function about()
     {
-        return view('pages.signup');
+        return view('about');
     }
 
-
-    public function signupSubmit(Request $request)
+    public function contact()
     {
-        try {
-            $validator = Validator::make($request->all(), [
-                'name' => 'required|string|max:255',
-                'email' => 'required|email|max:255|unique:users,email',
-                'password' => 'required',
-                'phone_number' => 'required|numeric',
-                'card_information' => 'required|numeric',
-                'address' => 'required|string|max:255',
-            ]);
+        return view('contact');
+    }
 
-            if ($validator->fails()) {
-                return back()->withErrors($validator)->withInput($request->except('password'));
-            }
+    public function course(Request $request, $type)
+    {
+        $searchQuery = $request->input('search');
 
+        $query = Course::query();
 
-            $user = new User();
-            $user->name = $request->name;
-            $user->email = $request->email;
-            $user->password = Hash::make($request->password);;
-            $user->phone_number = $request->phone_number;
-            $user->card_information = $request->card_information;
-            $user->verification_code = rand(1000, 9999);
-            $user->address = $request->address;
-
-            $user->save();
-
-            $encryptedUserId = Crypt::encrypt($user->id);
-            Mail::to($user->email)->send(new EmailVerification($user));
-
-            return redirect()->route('email.verify.form', ['user_id' => $encryptedUserId]);
-
-            return back()->with(['success' => 'User created successfully']);
-        } catch (Exception $e) {
-            return back()
-                ->with(['error' => $e->getMessage()])
-                ->withInput($request->except('password'));
+        if ($searchQuery) {
+            $query->where('name', 'LIKE', "%$searchQuery%")
+                ->orWhere('description', 'LIKE', "%$searchQuery%");
         }
+
+
+        $query->whereType($type)->whereStatus('1');
+
+        $data = $query->get();
+
+        return view($type, compact('data'));
     }
 
-    public function emailVerifyForm($user_id)
+    public function courseDetails($type, $slug)
     {
-        try {
-            $userId = Crypt::decrypt($user_id);
-            $user = User::findOrFail($userId);
-            return view('pages.email-verify', ['user' => $user]);
-        } catch (Exception $e) {
-            return redirect()->route('signup')->with(['error' => 'Invalid verification link']);
-        }
-    }
-
-
-
-    public function emailVerify(Request $request)
-    {
-        try {
-            $validator = Validator::make($request->all(), [
-                'verification_code' => 'required|string',
-                'user_id' => 'required'
-            ]);
-
-            if ($validator->fails()) {
-                return back()->withErrors($validator);
-            }
-
-            $userId = decrypt($request->user_id);
-            $user = User::findOrFail($userId);
-
-            if ($user->verification_code != $request->verification_code) {
-                return back()->withErrors(['verification_code' => 'Invalid verification code']);
-            }
-
-            $user->email_verified_at = now();
-            $user->save();
-
-            return redirect()->route('home')->with('success', 'Email verified successfully!');
-        } catch (Exception $e) {
-            return back()->with(['error' => $e->getMessage()]);
-        }
+        $data = Course::getCourseBySlug($type, $slug);
+        $latest = Course::getLatestRecord($type);
+        $detailPage = $type . 'Details';
+        return view($detailPage, compact('data', 'latest'));
     }
 
 
-    public function resend(Request $request)
+
+    public function contactUs(Request $request)
     {
-        try {
-            $userId = decrypt($request->user_id);
-            $user = User::findOrFail($userId);
+        $form_source =   $request->input('form_source') === 'footer' ? 'footer' : 'about_us';
 
-            // Generate a new verification code
-            $user->verification_code = rand(1000, 9999);
-            $user->save();
+        $request->validate([
+            'name' => 'required|string',
+            'email' => 'required|email',
+            'description' => 'required|string',
+            'contact_number' => 'numeric|digits_between:9,12',
+            'form_source' => 'required|in:about_us,footer',
+        ]);
 
-            // Send the verification email
-            Mail::to($user->email)->send(new EmailVerification($user));
+        $table = new Contact();
+        $table->name = $request->name;
+        $table->email = $request->email;
+        $table->description = $request->description;
+        $table->contact_number = $request->contact_number;
+        $table->save();
 
-            return response()->json(['message' => 'Code resent successfully'], 200);
-        } catch (\Exception $e) {
-            return response()->json(['error' => 'Failed to resend code'], 500);
-        }
-    }
-
-
-    public function login()
-    {
-        return view('pages.login');
-    }
-
-    public function loginSubmit(Request $request)
-    {
-        try {
-            $validator = Validator::make($request->all(), [
-                'email' => 'required|email|exists:users,email',
-                'password' => 'required',
-            ]);
-
-            if ($validator->fails()) {
-                return back()->withErrors($validator)->withInput($request->except('password'));
-            }
-
-            $credentials = $request->only('email', 'password');
-
-            if (Auth::attempt($credentials)) {
-                $user = Auth::user();
-
-                if (!$user->email_verified_at) {
-                    Auth::logout();
-                    return redirect()->route('login')->with('error', 'Email not verified. Please check your email for verification instructions.');
-                }
-
-                return redirect()->route('home');
-            }
-
-            return redirect()->route('login')->with('error', 'Invalid credentials. Please try again.')->withInput($request->except('password'));
-        } catch (Exception $e) {
-            return back()
-                ->with(['error' => $e->getMessage()]);
-        }
+        return redirect()->back()->with(['status' => 'success', 'message' => 'Your Message has been sent successfully!', 'form_source' => $form_source]);
     }
 }

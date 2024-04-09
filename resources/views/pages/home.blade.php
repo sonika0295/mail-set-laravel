@@ -1,34 +1,40 @@
 @extends('layouts.app')
 
-
 @section('content')
-    <div class="background-container">
-        <img src="{{ asset('images/background.png') }}" alt="Background Image" />
+    <div class="container-fluid gtco-banner-area">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <h1>
+                        Welcome to <span> MuMarketplace</span> </h1>
+                    <p>Discover the MuMarketplace - your go-to destination for all your shopping needs. Whether you're
+                        searching for products or looking to sell your own, our platform connects you with buyers and
+                        sellers seamlessly. Experience the convenience of finding everything you need in one centralized
+                        location.
 
-        <div class="overlay"></div>
-        <div class="content">
-
-            @if (session('success'))
-                <div class="alert alert-success success-message" style="text-align: center">
-                    {{ session('success') }}
+                    </p>
+                    <a href="#contact">Get Your item <i class="fa fa-angle-right" aria-hidden="true"></i></a>
                 </div>
-            @endif
-
-            <div id="home">
-
-                <h2>Welcome to the MuMarketplace</h2>
-                <p>
-                    Find everything you need in one place, connect with sellers, or list
-                    your own items.
-                </p>
-                <a href="{{ route('buy') }}"><button type="button">Get your item</button></a>
+                <div class="col-md-6">
+                    <div class="card"><img class="card-img-top img-fluid" src="{{ asset('front/images/banner-img.png') }}"
+                            alt=""></div>
+                </div>
             </div>
         </div>
     </div>
 @endsection
 
 
-@push('scripts')
-    <script src="//code.tidio.co/qdqw4ysnwjjavc0tovkoycadfmanndhw.js" async></script>
-    <script src="{{ asset('js/script.js') }}"></script>
+@push('styles')
+    <style>
+        @media (max-width: 768px) {
+            .learning-card {
+                padding: 0.65rem;
+            }
+
+            .learn-lext {
+                font-size: 4px;
+            }
+        }
+    </style>
 @endpush

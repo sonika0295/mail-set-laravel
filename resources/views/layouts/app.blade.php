@@ -7,7 +7,7 @@
 
 <!-- BEGIN: Body-->
 
-<body class="home-body">
+<body>
     <!-- BEGIN: Header-->
     @include('partial.header')
 

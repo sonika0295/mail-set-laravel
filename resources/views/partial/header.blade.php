@@ -1,37 +1,50 @@
-@php
-// Check if the user is logged in
-if (session()->has('user_info')) {
-    // Retrieve user information from session variables
-    $userInfo = session('user_info');
-    $name = $userInfo['name'];
-    // Get the first letter of the user's name
-    $initials = strtoupper(substr($name, 0, 1));
-} else {
-    // If user is not logged in, set initials to empty string
-    $initials = '';
-}
-@endphp
-
-<div class="navbar">
-    <a href="{{ route('home') }}">Home</a>
-    <a href="{{ route('buy') }}">Buy</a>
-    <a href="{{ route('sell') }}">Sell</a>
-    <a href="{{ route('get_request') }}">Request</a>
-    <a href="{{ route('setting') }}">Settings</a>
-
-    <div class="dropdown">
-        <button class="dropbtn">Accounts</button>
-        <div class="dropdown-content">
-            @if (session()->has('user_info'))
-                <a href="{{ route('logout') }}">Logout</a>
-            @else
-                <a href="{{ route('login') }}">Sign In</a>
-                <a href="{{ route('signup') }}">Register</a>
-            @endif
+<nav class="navbar navbar-expand-lg navbar-light bg-light bg-transparent" id="gtco-main-nav">
+    <div class="container">
+        <a class="navbar-brand" href="#">MuMarketplace</a>
+        <button class="navbar-toggler" data-target="#my-nav" onclick="myFunction(this)" data-toggle="collapse">
+            <span class="bar1"></span>
+            <span class="bar2"></span>
+            <span class="bar3"></span>
+        </button>
+        <div id="my-nav" class="collapse navbar-collapse">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item"><a class="nav-link" href="{{ route('index') }}">Home</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ route('assignment') }}">Buy</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ route('course') }}">Sell</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ route('about') }}">Request</a></li>
+                <li class="nav-item"><a class="nav-link setting" href="{{ route('about') }}">Settings</a></li>
+            </ul>
+            <form class="form-inline my-2 my-lg-0">
+                <div class="dropdown">
+                    <a href="#" class="btn btn-outline-dark my-2 my-sm-0 mr-3 text-uppercase dropdown-toggle" id="accountDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Account</a>
+                    <div class="dropdown-menu" aria-labelledby="accountDropdown">
+                        <a class="dropdown-item" href="#signup">Signup</a>
+                        <a class="dropdown-item" href="#login">Login</a>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
+</nav>
 
-    @if (session()->has('user_info'))
-        <span class="user-initials">{{ $initials }}</span>
-    @endif
-</div>
+<script>
+    // Function to toggle dropdown menu visibility
+    function toggleDropdown() {
+        var dropdownMenu = document.querySelector('.dropdown-menu');
+        dropdownMenu.classList.toggle('show');
+    }
+
+    // Close dropdown menu when clicking outside
+    window.onclick = function(event) {
+        if (!event.target.matches('.dropdown-toggle')) {
+            var dropdowns = document.getElementsByClassName("dropdown-menu");
+            var i;
+            for (i = 0; i < dropdowns.length; i++) {
+                var openDropdown = dropdowns[i];
+                if (openDropdown.classList.contains('show')) {
+                    openDropdown.classList.remove('show');
+                }
+            }
+        }
+    }
+</script>
