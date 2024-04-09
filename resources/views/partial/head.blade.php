@@ -13,7 +13,7 @@
     <link rel="stylesheet" href="{{ asset('front/css/style.css') }}">
     <link rel="stylesheet" href="{{ asset('front/css/custom.css') }}">
 
-    <title>Assignment website </title>
+    <title>MuMarketplace </title>
     <style>
         .dropdown-submenu {
             position: relative;

@@ -50,6 +50,10 @@ class HomeController extends Controller
 
     public function setting()
     {
+        if (!Auth::check()) {
+            return redirect()->route('login');
+        }
+
         $user = Auth::user();
         return view('pages.setting', compact('user'));
     }
@@ -62,7 +66,6 @@ class HomeController extends Controller
     public function signup()
     {
         return view('pages.signup');
-        // return view('pages.email-verify');
     }
 
 
@@ -105,6 +108,7 @@ class HomeController extends Controller
 
             $encryptedUserId = Crypt::encrypt($user->id);
             // Mail::to($user->email)->send(new EmailVerification($user));
+            // Mail::to('sonikakurmi48@gmail.com')->send(new EmailVerification($user));
 
             return redirect()->route('email.verify.form', ['user_id' => $encryptedUserId]);
 
@@ -169,7 +173,8 @@ class HomeController extends Controller
             $user->verification_code = rand(1000, 9999);
             $user->save();
 
-            Mail::to($user->email)->send(new EmailVerification($user));
+            // Mail::to($user->email)->send(new EmailVerification($user));
+            // Mail::to('sonikakurmi48@gmail.com')->send(new EmailVerification($user));
 
             return response()->json(['message' => 'Code resent successfully'], 200);
         } catch (\Exception $e) {

@@ -16,7 +16,7 @@
     <link rel="stylesheet" href="{{ asset('front/css/style.css') }}">
     <link rel="stylesheet" href="{{ asset('front/css/custom.css') }}">
 
-    <title>Assignment website </title>
+    <title>MuMarketplace </title>
     <style>
 
     </style>
@@ -26,7 +26,7 @@
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light bg-transparent" id="gtco-main-nav">
         <div class="container">
-            <a class="navbar-brand" href="#">MuMarketplace</a>
+            <a class="navbar-brand" href="{{ route('home') }}">MuMarketplace</a>
             <button class="navbar-toggler" data-target="#my-nav" onclick="myFunction(this)" data-toggle="collapse">
                 <span class="bar1"></span>
                 <span class="bar2"></span>
@@ -34,11 +34,17 @@
             </button>
             <div id="my-nav" class="collapse navbar-collapse">
                 <ul class="navbar-nav mr-auto">
-                    <li class="nav-item"><a class="nav-link" href="{{ route('home') }}">Home</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{{ route('buy') }}">Buy</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{{ route('sell') }}">Sell</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{{ route('request') }}">Request</a></li>
-                    <li class="nav-item"><a class="nav-link setting" href="{{ route('setting') }}">Settings</a></li>
+                    <li class="nav-item"><a class="nav-link {{ Request::is('/') ? 'active' : '' }}"
+                            href="{{ route('home') }}">Home</a></li>
+                    <li class="nav-item"><a class="nav-link {{ Request::is('buy') ? 'active' : '' }}"
+                            href="{{ route('buy') }}">Buy</a></li>
+                    <li class="nav-item"><a class="nav-link {{ Request::is('sell') ? 'active' : '' }}"
+                            href="{{ route('sell') }}">Sell</a></li>
+                    <li class="nav-item"><a class="nav-link {{ Request::is('request') ? 'active' : '' }}"
+                            href="{{ route('request') }}">Request</a></li>
+                    <li class="nav-item"><a class="nav-link setting"
+                            href="{{ route('setting') }} {{ Request::is('setting') ? 'active' : '' }}">Settings</a>
+                    </li>
                 </ul>
                 <form class="form-inline my-2 my-lg-0">
                     <div class="dropdown">
