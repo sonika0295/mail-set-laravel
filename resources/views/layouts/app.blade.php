@@ -46,8 +46,13 @@
                             id="accountDropdown" data-toggle="dropdown" aria-haspopup="true"
                             aria-expanded="false">Account</a>
                         <div class="dropdown-menu" aria-labelledby="accountDropdown">
-                            <a class="dropdown-item" href="{{ route('signup') }}">Signup</a>
-                            <a class="dropdown-item" href="{{ route('login') }}">Login</a>
+                            @if (Auth::check())
+                                <a class="dropdown-item" href="{{ route('logout') }}">Logout</a>
+                            @else
+                                <a class="dropdown-item" href="{{ route('signup') }}">Signup</a>
+                                <a class="dropdown-item" href="{{ route('login') }}">Login</a>
+                            @endif
+
                         </div>
                     </div>
                 </form>

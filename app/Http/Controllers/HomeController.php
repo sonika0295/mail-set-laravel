@@ -50,7 +50,8 @@ class HomeController extends Controller
 
     public function setting()
     {
-        return view('pages.setting');
+        $user = Auth::user();
+        return view('pages.setting', compact('user'));
     }
 
     public function contact()
@@ -150,7 +151,9 @@ class HomeController extends Controller
             $user->email_verified_at = now();
             $user->save();
 
-            return redirect()->route('home')->with('success', 'Email verified successfully!');
+            Auth::login($user);
+
+            return redirect()->route('setting')->with('success', 'Email verified successfully!');
         } catch (Exception $e) {
             return back()->with(['error' => $e->getMessage()]);
         }
@@ -163,11 +166,9 @@ class HomeController extends Controller
             $userId = decrypt($request->user_id);
             $user = User::findOrFail($userId);
 
-            // Generate a new verification code
             $user->verification_code = rand(1000, 9999);
             $user->save();
 
-            // Send the verification email
             Mail::to($user->email)->send(new EmailVerification($user));
 
             return response()->json(['message' => 'Code resent successfully'], 200);
@@ -209,6 +210,44 @@ class HomeController extends Controller
             }
 
             return redirect()->route('login')->with('error', 'Invalid credentials. Please try again.')->withInput($request->except('password'));
+        } catch (Exception $e) {
+            return back()
+                ->with(['error' => $e->getMessage()]);
+        }
+    }
+
+
+    public function logout()
+    {
+        Auth::logout();
+
+        return redirect()->route('home');
+    }
+
+
+    public function settingUpdate(Request $request)
+    {
+        try {
+            $user = Auth::user();
+
+            $validator = Validator::make($request->all(), [
+                'name' => 'required|string|max:255',
+                'phone_number' => 'required|numeric',
+                'address' => 'required|string|max:255',
+                'card_information' => 'required|numeric',
+            ]);
+
+            if ($validator->fails()) {
+                return back()->withErrors($validator)->withInput();
+            }
+
+            $user->name = $request->name;
+            $user->phone_number = $request->phone_number;
+            $user->address = $request->address;
+            $user->card_information = $request->card_information;
+            $user->save();
+
+            return redirect()->route('setting')->with('success', 'Your details have been updated successfully!');
         } catch (Exception $e) {
             return back()
                 ->with(['error' => $e->getMessage()]);

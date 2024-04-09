@@ -11,8 +11,6 @@ Route::get('/clear-cache', function () {
     Artisan::call('config:clear');
     Artisan::call('view:cache');
     Artisan::call('view:clear');
-    // Artisan::call('make:model Contact');
-    // Artisan::call('make:model Course');
     return 'Cache cleared, optimized, and .env file refreshed successfully.';
 });
 
@@ -37,21 +35,9 @@ Route::post('/email/verify', [HomeController::class, 'emailVerify'])->name('emai
 Route::post('/email/resend', [HomeController::class, 'resend'])->name('email.resend');
 Route::get('/login', [HomeController::class, 'login'])->name('login');
 Route::post('/login', [HomeController::class, 'loginSubmit'])->name('login.submit');
+Route::get('/logout', [HomeController::class, 'logout'])->name('logout');
 
 
 
 
-
-
-
-
-
-
-
-
-// Route::get('/buy', [HomeController::class, 'home'])->name('buy');
-// Route::get('/sell', [HomeController::class, 'home'])->name('sell');
-// Route::get('/get_request', [HomeController::class, 'home'])->name('get_request');
-// Route::get('/logout', [HomeController::class, 'home'])->name('logout');
-// Route::get('/sign_in', [HomeController::class, 'home'])->name('sign_in');
-// Route::get('/setting', [HomeController::class, 'home'])->name('setting');
+Route::post('/setting', [HomeController::class, 'settingUpdate'])->name('setting.update');
