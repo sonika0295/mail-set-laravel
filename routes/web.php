@@ -18,27 +18,34 @@ Route::get('/clear-cache', function () {
 
 
 
-Route::get('/', [HomeController::class, 'index'])->name('index');
-Route::get('/assignment', [HomeController::class, 'index'])->name('assignment');
-Route::get('/course', [HomeController::class, 'index'])->name('course');
-Route::get('/about', [HomeController::class, 'about'])->name('about');
+Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/buy', [HomeController::class, 'buy'])->name('buy');
+Route::get('/sell', [HomeController::class, 'sell'])->name('sell');
+Route::get('/request', [HomeController::class, 'request'])->name('request');
+Route::get('/setting', [HomeController::class, 'setting'])->name('setting');
 Route::get('/contact', [HomeController::class, 'contact']);
 Route::get('/data/{type}', [HomeController::class, 'course'])->name('data');
-Route::get('/details/{type}/{slug}', [HomeController::class, 'courseDetails'])->name('details');
-Route::post('/contact-us', [HomeController::class, 'contactUs'])->name('contact-us');
 
 
 
-// Route::get('/', [HomeController::class, 'home'])->name('home');
-// Route::get('/signup', [HomeController::class, 'signup'])->name('signup');
+Route::get('/signup', [HomeController::class, 'signup'])->name('signup');
 
 
-// Route::post('/signup', [HomeController::class, 'signupSubmit'])->name('signup.submit');
-// Route::get('/email-verify/{user_id}', [HomeController::class, 'emailVerifyForm'])->name('email.verify.form');
-// Route::post('/email/verify', [HomeController::class, 'emailVerify'])->name('email.verify');
-// Route::post('/email/resend', [HomeController::class, 'resend'])->name('email.resend');
-// Route::get('/login', [HomeController::class, 'login'])->name('login');
-// Route::post('/login', [HomeController::class, 'loginSubmit'])->name('login.submit');
+Route::post('/signup', [HomeController::class, 'signupSubmit'])->name('signup.submit');
+Route::get('/email-verify/{user_id}', [HomeController::class, 'emailVerifyForm'])->name('email.verify.form');
+Route::post('/email/verify', [HomeController::class, 'emailVerify'])->name('email.verify');
+Route::post('/email/resend', [HomeController::class, 'resend'])->name('email.resend');
+Route::get('/login', [HomeController::class, 'login'])->name('login');
+Route::post('/login', [HomeController::class, 'loginSubmit'])->name('login.submit');
+
+
+
+
+
+
+
+
+
 
 
 

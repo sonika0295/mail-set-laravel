@@ -10,10 +10,8 @@
                     <p>Discover the MuMarketplace - your go-to destination for all your shopping needs. Whether you're
                         searching for products or looking to sell your own, our platform connects you with buyers and
                         sellers seamlessly. Experience the convenience of finding everything you need in one centralized
-                        location.
-
-                    </p>
-                    <a href="#contact">Get Your item <i class="fa fa-angle-right" aria-hidden="true"></i></a>
+                        location. </p>
+                    <a href="#contact">Get Your Item <i class="fa fa-angle-right" aria-hidden="true"></i></a>
                 </div>
                 <div class="col-md-6">
                     <div class="card"><img class="card-img-top img-fluid" src="{{ asset('front/images/banner-img.png') }}"

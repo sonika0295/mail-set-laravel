@@ -8,7 +8,7 @@
         </button>
         <div id="my-nav" class="collapse navbar-collapse">
             <ul class="navbar-nav mr-auto">
-                <li class="nav-item"><a class="nav-link" href="{{ route('index') }}">Home</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ route('home') }}">Home</a></li>
                 <li class="nav-item"><a class="nav-link" href="{{ route('assignment') }}">Buy</a></li>
                 <li class="nav-item"><a class="nav-link" href="{{ route('course') }}">Sell</a></li>
                 <li class="nav-item"><a class="nav-link" href="{{ route('about') }}">Request</a></li>

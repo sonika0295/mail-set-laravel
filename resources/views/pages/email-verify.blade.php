@@ -1,54 +1,88 @@
 @extends('layouts.app')
 
-
 @section('content')
-    <div id="signup" class="content-section">
-        <h2>Email Verification </h2>
+    <div class="container-fluid">
+        <div class="container-fluid gtco-news" id="news">
+            <div class="container">
+                <h2>Email Verification</h2>
 
-        @if (session('success'))
-            <div class="alert alert-success success-message">
-                {{ session('success') }}
+                @if (session('success'))
+                    <div class="alert alert-success" role="alert">
+                        {{ session('success') }}
+                    </div>
+                @endif
+
+                @if (session('error'))
+                    <div class="alert alert-danger" role="alert">
+                        {{ session('error') }}
+                    </div>
+                @endif
+
+                <form action="{{ route('email.verify') }}" method="POST" style="box-shadow:0 0 10px  lightgrey"
+                    class="p-4">
+                    @csrf
+                    <input type="hidden" id="userIdInput" name="user_id" value="{{ encrypt($user->id) }}">
+                    <div class="from-group  row mt-4">
+                        <div class="col-8">
+                            <label class="control-label" for="name">Enter Code Here:</label>
+                            <input type="text" name="verification_code" value="{{ old('verification_code') }}"
+                                class="form-control" placeholder="Verification Code...." required>
+
+                            @if ($errors->has('verification_code'))
+                                <span class="invalid-feedbackk" role="alert">
+                                    <strong>{{ $errors->first('verification_code') }}</strong>
+                                </span>
+                            @endif
+
+                        </div>
+                        <div class="col-4">
+                            <label class="control-label" for="name">Resend from Code Here:</label>
+                            <button class="btn  w-100"> <a href="javascript:void(0)" id="resendCode">Resend
+                                    Code</a></button>
+                        </div>
+                    </div>
+
+
+
+                    <div class="from-group  row mt-4">
+
+                        <div class="col-2">
+                            <button style="background-image:-webkit-linear-gradient(0deg, #06c6f9 0%, #38eaf9 100%)"
+                                class="submit-button btn btn-primary text-white btn-lg btn-circled"
+                                type="submit">Verify</button>
+                        </div>
+
+                    </div>
+
+                </form>
+
             </div>
-        @endif
-
-        @if (session('error'))
-            <div class="alert alert-danger error-message">
-                {{ session('error') }}
-            </div>
-        @endif
-
-        <form id="signUpForm" action="{{ route('email.verify') }}" method="POST">
-            @csrf
-
-            <input type="hidden" id="userIdInput" name="user_id" value="{{ encrypt($user->id) }}">
-
-            <div class="form-group">
-                <label for="emailCode">Enter Code Here:</label>
-                <input type="text" id="emailCode" name="verification_code" value="{{ old('verification_code') }}"
-                    required />
-                @error('verification_code')
-                    <span class="text-danger">{{ $message }}</span>
-                @enderror
-            </div>
-            <div class="form-group resend">
-                <a href="javascript:void(0)" id="resendCode">Resend Code</a>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Verify" />
-            </div>
-
-        </form>
-
+        </div>
     </div>
 @endsection
 
 @push('styles')
     <style>
-        .resend {
-            text-align: right;
+        .assignmt-img {
+            width: 365px !important;
+            height: 264px !important;
+        }
+
+        @media (max-width: 768px) {
+
+            .assignmt-img {
+                width: unset !important;
+            }
+
+        }
+
+        .not-found {
+            text-align: center;
         }
     </style>
 @endpush
+
+
 @push('scripts')
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
