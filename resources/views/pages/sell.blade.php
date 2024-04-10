@@ -59,7 +59,7 @@
 
                     <div class="from-group  row  mt-3">
                         <div class="col-6">
-                            <label class="control-label" for="price">Price ($): </label>
+                            <label class="control-label" for="price">Price (Rs): </label>
 
                             <input type="text" name="price" id="price" class="form-control" placeholder="Price...."
                                 value="{{ old('price') }}" required>
