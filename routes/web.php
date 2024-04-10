@@ -42,3 +42,4 @@ Route::get('/logout', [HomeController::class, 'logout'])->name('logout');
 Route::post('/setting', [HomeController::class, 'settingUpdate'])->name('setting.update');
 
 Route::post('/sell', [SellerController::class, 'sellItemAdd'])->name('sell.submit');
+Route::get('item/detail/{slug}', [SellerController::class, 'sellItemDetails'])->name('item.detail');

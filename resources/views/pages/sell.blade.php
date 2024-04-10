@@ -72,10 +72,26 @@
 
                         </div>
                         <div class="col-6">
+                            <label class="control-label" for="price">Image: </label>
+                            <input type="file" name="image" class="form-control" accept="image/jpeg, image/png"
+                                required>
+                            @if ($errors->has('image'))
+                                <span class="invalid-feedbackk" role="alert">
+                                    <strong>{{ $errors->first('image') }}</strong>
+                                </span>
+                            @endif
+                        </div>
+
+                    </div>
+
+                    <div class="from-group  row mt-4">
+
+                        <div class="col-12">
                             <label class="control-label" for="desc">Description:</label>
 
-                            <input type="text" name="desc" id="desc" class="form-control"
-                                placeholder="Description...." value="{{ old('desc') }}" required>
+                            <textarea class="form-control" cols="40" id="desc" name="desc" placeholder="Description..*" required=""
+                                rows="5">{{ old('desc') }}</textarea>
+
 
                             @if ($errors->has('desc'))
                                 <span class="invalid-feedbackk" role="alert">
@@ -86,24 +102,12 @@
                     </div>
 
                     <div class="from-group  row mt-4">
-                        <div class="col-8">
-                            <input type="file" name="image" class="form-control" accept="image/jpeg, image/png"
-                                required>
-                        </div>
-
-                        @if ($errors->has('image'))
-                            <span class="invalid-feedbackk" role="alert">
-                                <strong>{{ $errors->first('image') }}</strong>
-                            </span>
-                        @endif
-
                         <div class="col-4">
                             <button type="submit" class="btn  w-100"
-                                style="background-image:-webkit-linear-gradient(0deg, #06c6f9 0%, #38eaf9 100%)"> List
-                                Item</button>
+                                style="background-image:-webkit-linear-gradient(0deg, #06c6f9 0%, #38eaf9 100%)">
+                                Submit</button>
                         </div>
                     </div>
-
                 </form>
 
             </div>
@@ -131,3 +135,4 @@
         }
     </style>
 @endpush
+

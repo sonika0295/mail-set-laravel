@@ -9,6 +9,7 @@ use App\Models\Item;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
 use Exception;
+use Illuminate\Support\Str;
 
 class SellerController extends Controller
 {
@@ -29,6 +30,15 @@ class SellerController extends Controller
 
 
             $tbl = new Item();
+
+            $slug = Str::slug($request->name);
+            $count = Item::whereSlug($slug)->count();
+            if ($count > 0) {
+                $slug = $slug . '-' . date('ymdis') . '-' . rand(0, 999);
+            }
+
+
+            $tbl->slug = $slug;
             $tbl->category = $request->category;
             $tbl->name = $request->name;
             $tbl->price = $request->price;
@@ -63,5 +73,32 @@ class SellerController extends Controller
                 ->with(['error' => $e->getMessage()])
                 ->withInput();
         }
+    }
+
+
+    public function course(Request $request)
+    {
+        $searchQuery = $request->input('search');
+
+        $query = Item::query();
+
+        if ($searchQuery) {
+            $query->where('name', 'LIKE', "%$searchQuery%")
+                ->orWhere('price', 'LIKE', "%$searchQuery%")->orWhere('description', 'LIKE', "%$searchQuery%");
+        }
+
+        $query->whereStatus('1');
+
+        $data = $query->get();
+
+        return view('pages.home', compact('data'));
+    }
+
+    public function sellItemDetails($slug)
+    {
+        $data = Item::getItemBySlug($slug);
+        $latest = Item::getLatestRecord();
+        $detailPage = 'pages.sell-item-detail';
+        return view($detailPage, compact('data', 'latest'));
     }
 }

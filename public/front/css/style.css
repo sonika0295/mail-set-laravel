@@ -993,12 +993,13 @@ body {
 }
 
 #gtco-main-nav .navbar-nav li a.active {
-
-
   background: -webkit-linear-gradient(0deg, #005870, #2fbfd5);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   font-weight: bolder;
+}
 
-
+.sell-item-img{
+  width: 350px;
+  height: 241px;
 }

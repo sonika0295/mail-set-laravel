@@ -32,9 +32,22 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function index()
+    public function index(Request $request)
     {
-        return view('pages.home');
+        $searchQuery = $request->input('search');
+
+        $query = Item::query();
+
+        if ($searchQuery) {
+            $query->where('name', 'LIKE', "%$searchQuery%")
+                ->orWhere('price', 'LIKE', "%$searchQuery%")->orWhere('description', 'LIKE', "%$searchQuery%");
+        }
+
+        $query->whereStatus('1');
+
+        $data = $query->paginate(9);    
+
+        return view('pages.home', compact('data'));
     }
 
     public function buy()
