@@ -150,5 +150,9 @@
         .gtco-news .owl-carousel .card p {
             font-size: 15px;
         }
+
+        .gtco-news h2 {
+            font-size: 23px;
+        }
     </style>
 @endpush

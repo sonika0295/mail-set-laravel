@@ -28,8 +28,7 @@
         <div class="container">
             <h2>Selling Items</h2>
 
-            <form action="{{ route('data', 'assignment') }}" method="GET" style="box-shadow:0 0 10px  lightgrey"
-                class="p-4">
+            <form action="{{ route('home') }}" method="GET" style="box-shadow:0 0 10px  lightgrey" class="p-4">
                 <div class="from-group  row">
                     @php
                         $categories = App\Models\Category::whereStatus('1')->get();
@@ -69,7 +68,9 @@
             @if ($data->isEmpty())
                 <div class="row mt-4">
                     <div class="col-12 not-found">
-                        <p>No assignments found.</p>
+                        <div class="card text-center">
+                            <p>No Items found.</p>
+                        </div>
                     </div>
                 </div>
             @else

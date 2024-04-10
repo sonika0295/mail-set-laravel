@@ -35,20 +35,31 @@ class HomeController extends Controller
     public function index(Request $request)
     {
         $searchQuery = $request->input('search');
+        $category_id = $request->input('category_id');
 
-        $query = Item::query();
+        $query = Item::query()->whereStatus('1');
 
-        if ($searchQuery) {
-            $query->where('name', 'LIKE', "%$searchQuery%")
-                ->orWhere('price', 'LIKE', "%$searchQuery%")->orWhere('description', 'LIKE', "%$searchQuery%");
+        if ($searchQuery || $category_id) {
+            $query->where(function ($query) use ($searchQuery, $category_id) {
+                if ($searchQuery) {
+                    $query->where(function ($query) use ($searchQuery) {
+                        $query->where('name', 'LIKE', "%$searchQuery%")
+                            ->orWhere('price', 'LIKE', "%$searchQuery%")
+                            ->orWhere('description', 'LIKE', "%$searchQuery%");
+                    });
+                }
+
+                if ($category_id) {
+                    $query->where('category', $category_id);
+                }
+            });
         }
 
-        $query->whereStatus('1');
-
-        $data = $query->paginate(9);    
+        $data = $query->paginate(9);
 
         return view('pages.home', compact('data'));
     }
+
 
     public function buy()
     {
