@@ -13,6 +13,8 @@ use App\Mail\EmailVerification;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
+use App\Models\Category;
+use App\Models\Item;
 
 class HomeController extends Controller
 {
@@ -41,7 +43,9 @@ class HomeController extends Controller
     }
     public function sell()
     {
-        return view('pages.sell');
+        $categories = Category::whereStatus('1')->get();
+
+        return view('pages.sell', compact('categories'));
     }
     public function request()
     {
@@ -98,7 +102,7 @@ class HomeController extends Controller
             $user = new User();
             $user->name = $request->name;
             $user->email = $request->email;
-            $user->password = Hash::make($request->password);;
+            $user->password = Hash::make($request->password);
             $user->phone_number = $request->phone_number;
             $user->card_information = $request->card_information;
             $user->verification_code = rand(1000, 9999);
