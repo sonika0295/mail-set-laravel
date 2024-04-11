@@ -87,8 +87,15 @@
                                             <p class="info-item">Category: {{ $item->CategoryName->name }}</p>
                                         </div>
 
-                                        <a href="{{ route('item.detail', ['slug' => $item->slug]) }}">READ
-                                            MORE <i class="fa fa-angle-right" aria-hidden="true"></i></a>
+                                        <div class="info-line">
+                                            <p class="info-item"><a
+                                                    href="{{ route('item.detail', ['slug' => $item->slug]) }}">READ
+                                                    MORE <i class="fa fa-angle-right" aria-hidden="true"></i></a></p>
+                                            <a href="{{ route('user', $item->user_id) }}" class="btn btn-primary"><i
+                                                    class="fa fa-comments" aria-hidden="true"></i>
+                                                Chat</a>
+                                        </div>
+
                                     </div>
                                 </div>
                             </div>
@@ -126,19 +133,15 @@
         .info-line {
             display: flex;
             align-items: center;
-            justify-content: flex-start;
+            justify-content: space-between;
             margin-bottom: 10px;
-            /* Adjust margin as needed */
         }
 
         .info-item {
             margin-right: 20px;
-            /* Adjust margin between items */
+
         }
 
-        .description {
-            /* Your styles for the description */
-        }
 
         .info-line p {
             font-size: 16px;
