@@ -28,7 +28,7 @@ Route::controller(HomeController::class)->group(function () {
     Route::post('/email/resend', 'resend')->name('email.resend');
     Route::get('/login', 'login')->name('login');
     Route::post('/login', 'loginSubmit')->name('login.submit');
-
+  
     Route::middleware('auth')->group(function () {
         Route::get('/sell', 'sell')->name('sell');
         Route::get('/setting', 'setting')->name('setting');

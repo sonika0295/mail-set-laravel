@@ -35,24 +35,36 @@ class HomeController extends Controller
     public function index(Request $request)
     {
         $searchQuery = $request->input('search');
-        $category_id = $request->input('category_id');
+        $catid = $request->input('catid');
+        $min_p = $request->input('min_p');
+        $max_p = $request->input('max_p');
+        $sdate = $request->input('sdate');
+        $edate = $request->input('edate');
 
         $query = Item::query()->whereStatus('1');
 
-        if ($searchQuery || $category_id) {
-            $query->where(function ($query) use ($searchQuery, $category_id) {
-                if ($searchQuery) {
-                    $query->where(function ($query) use ($searchQuery) {
-                        $query->where('name', 'LIKE', "%$searchQuery%")
-                            ->orWhere('price', 'LIKE', "%$searchQuery%")
-                            ->orWhere('description', 'LIKE', "%$searchQuery%");
-                    });
-                }
+        if ($searchQuery) {
+            $query->where('name', 'LIKE', "%$searchQuery%")
+                ->orWhere('price', 'LIKE', "%$searchQuery%")
+                ->orWhere('description', 'LIKE', "%$searchQuery%");
+        }
 
-                if ($category_id) {
-                    $query->where('category', $category_id);
-                }
-            });
+        if ($catid) {
+            $query->whereCategory($catid);
+        }
+
+        if ($min_p) {
+            $query->where('price', '>=', $min_p);
+        }
+        if ($max_p) {
+            $query->where('price', '<=', $max_p);
+        }
+
+        if ($sdate) {
+            $query->whereDate('created_at', '>=', $sdate);
+        }
+        if ($edate) {
+            $query->whereDate('created_at', '<=', $edate);
         }
 
         $data = $query->paginate(9);

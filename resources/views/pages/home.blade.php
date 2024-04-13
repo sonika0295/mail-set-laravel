@@ -23,96 +23,148 @@
     </div>
 
 
-
     <div class="container-fluid gtco-news">
         <div class="container">
-            <h2>Selling Items</h2>
+            <form action="{{ route('home') }}" method="GET" style="box-shadow:0 0 10px  lightgrey" class="p-3">
 
-            <form action="{{ route('home') }}" method="GET" style="box-shadow:0 0 10px  lightgrey" class="p-4">
-                <div class="from-group  row">
-                    @php
-                        $categories = App\Models\Category::whereStatus('1')->get();
+                <h2>Selling Items</h2>
 
-                        $category_id = request()->query('category_id');
-
-                    @endphp
-
-
-                    <div class="col-3">
-                        <select name="category_id" id="category_id" class="form-control">
-                            @if ($categories->isEmpty())
-                                <option value="" disabled>No categories available</option>
-                            @else
-                                <option value="" {{ $category_id == null ? 'selected' : '' }}>All Category
-                                </option>
-                                @foreach ($categories as $category)
-                                    <option value="{{ $category->id }}"
-                                        {{ $category_id == $category->id ? 'selected' : '' }}>{{ $category->name }}
-                                    </option>
-                                @endforeach
-                            @endif
-                        </select>
-                    </div>
-
-
-                    <div class="col-7">
+                <div class="from-group row">
+                    <div class="col-md-10 col-sm-8">
                         <input type="text" name="search" class="form-control" placeholder="Search Items here"
                             value="{{ isset($_GET['search']) ? $_GET['search'] : '' }}">
                     </div>
-                    <div class="col-2">
-                        <button type="submit" class="btn  w-100"> Search</button>
+                    <div class="col-md-2 col-sm-4">
+                        <button type="submit" class="btn w-100">Search</button>
                     </div>
                 </div>
-            </form>
 
-            @if ($data->isEmpty())
-                <div class="row mt-4">
-                    <div class="col-12 not-found">
-                        <div class="card text-center">
-                            <p>No Items found.</p>
+
+                <div class="row  mt-4">
+                    <div class="col-md-3">
+
+                        <h4>Filter</h4>
+                        @php
+                            $categories = App\Models\Category::whereStatus('1')->get();
+                            $catid = request()->query('catid');
+                            $min_p = request()->query('min_p');
+                            $max_p = request()->query('max_p');
+                            $sdate = request()->query('sdate');
+                            $edate = request()->query('edate');
+                        @endphp
+                        <div class="form-group">
+                            <label for="catid">Category:</label>
+                            <select name="catid" id="catid" class="form-control">
+                                @if ($categories->isEmpty())
+                                    <option value="" disabled>No categories available</option>
+                                @else
+                                    <option value="" {{ $catid == null ? 'selected' : '' }}>All Category
+                                    </option>
+                                    @foreach ($categories as $category)
+                                        <option value="{{ $category->id }}" {{ $catid == $category->id ? 'selected' : '' }}>
+                                            {{ $category->name }}
+                                        </option>
+                                    @endforeach
+                                @endif
+                            </select>
                         </div>
-                    </div>
-                </div>
-            @else
-                <div class="row mt-4">
-                    @foreach ($data as $item)
-                        <div class="col-sm-4 col-12">
-                            <div>
-                                <div class="card text-center"><img class="card-img-top sell-item-img"
-                                        src="{{ asset($item->image) }}" alt="">
-                                    <div class="card-body text-left pr-0 pl-0">
-                                        <h5 class="three-dot font-weight-bold">{{ $item->name }}</h5>
-                                        <div class="info-line">
-                                            <p class="info-item">Price: {{ $item->price }} Rs</p>
-                                            <p class="info-item">Category: {{ $item->CategoryName->name }}</p>
-                                        </div>
 
-                                        <div class="info-line">
-                                            <p class="info-item"><a
-                                                    href="{{ route('item.detail', ['slug' => $item->slug]) }}">READ
-                                                    MORE <i class="fa fa-angle-right" aria-hidden="true"></i></a></p>
-                                            <a href="{{ route('user', $item->user_id) }}" class="btn btn-primary"><i
-                                                    class="fa fa-comments" aria-hidden="true"></i>
-                                                Chat</a>
-                                        </div>
-
-                                    </div>
+                        <div class="form-group">
+                            <label for="price_range">Price Range:</label>
+                            <div class="row">
+                                <div class="col-6">
+                                    <input type="number" class="form-control" name="min_p" placeholder="Min"
+                                        value="{{ $min_p }}">
+                                </div>
+                                <div class="col-6">
+                                    <input type="number" class="form-control" name="max_p" placeholder="Max"
+                                        value="{{ $max_p }}">
                                 </div>
                             </div>
                         </div>
-                    @endforeach
-                </div>
 
-                <!-- Pagination Links -->
-                <div class="row mt-4">
-                    <div class="col-12">
-                        {{ $data->links() }}
+                        <div class="form-group">
+                            <label for="date_range">Date Range:</label>
+                            <div class="row">
+                                <div class="col-6">
+                                    <input type="date" class="form-control" name="sdate" value="{{ $sdate }}">
+                                </div>
+                                <div class="col-6">
+                                    <input type="date" class="form-control" name="edate" value="{{ $edate }}">
+                                </div>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">Apply Filters</button>
+
+                    </div>
+
+
+                    <!-- Display Items -->
+                    <div class="col-md-9">
+                        @if ($data->isEmpty())
+                            <div class="row mt-4">
+                                <div class="col-12 not-found">
+                                    <div class="card text-center">
+                                        <p>No Items found.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        @else
+                            <div class="row mt-4">
+                                @foreach ($data as $item)
+                                    <div class="col-12">
+                                        <!-- Item Card -->
+                                        <div class="card mb-4">
+                                            <div class="row no-gutters">
+                                                <!-- Image -->
+                                                <div class="col-md-4">
+                                                    <img src="{{ asset($item->image) }}" class="card-img item-img"
+                                                        alt="Item Image">
+                                                </div>
+                                                <!-- Item details -->
+                                                <div class="col-md-8">
+                                                    <div class="card-body">
+                                                        <h5 class="card-title three-dot">{{ $item->name }}</h5>
+                                                        <p class="card-text">Date :
+                                                            {{ $item->created_at->format('d M Y') }}
+                                                        </p>
+                                                        <div class="price-category-container">
+                                                            <p class="price">Price : {{ $item->price }}</p>
+                                                            <p class="category">Category : {{ $item->categoryName->name }}
+                                                            </p>
+                                                        </div>
+                                                        <p class="card-text"
+                                                            style="overflow: hidden; text-overflow: ellipsis; -webkit-line-clamp: 2; -webkit-box-orient: vertical; display: -webkit-box;">
+                                                            {{ $item->description }}</p>
+
+                                                        <a href="{{ route('item.detail', ['slug' => $item->slug]) }}"
+                                                            class="btn btn-primary">Read More</a>
+
+                                                        <a href="{{ route('user', $item->user_id) }}"
+                                                            class="btn btn-primary"><i class="fa fa-comments"
+                                                                aria-hidden="true"></i>
+                                                            Chat</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
+
+
+                            <!-- Pagination Links -->
+                            <div class="row mt-4">
+                                <div class="col-12">
+                                    {{ $data->links() }}
+                                </div>
+                            </div>
+                        @endif
                     </div>
                 </div>
-            @endif
-
-
         </div>
+        </form>
     </div>
 @endsection
 
@@ -145,6 +197,25 @@
 
         .info-line p {
             font-size: 16px;
+        }
+
+        .item-img {
+            height: 250px;
+            width: 227px;
+        }
+
+        .price-category-container {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .price {
+            order: 1;
+        }
+
+        .category {
+            order: 2;
+            text-align: right;
         }
     </style>
 @endpush
