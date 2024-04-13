@@ -242,7 +242,11 @@ class HomeController extends Controller
                     return redirect()->route('login')->with('error', 'Email not verified. Please check your email for verification instructions.');
                 }
 
-                return redirect()->route('home');
+                if ($request->has('redirect')) {
+                    $request->session()->put('url.intended', $request->input('redirect'));
+                }
+
+                return redirect()->intended(route('home'));
             }
 
             return redirect()->route('login')->with('error', 'Invalid credentials. Please try again.')->withInput($request->except('password'));

@@ -1,0 +1,26 @@
+1. 
+\vendor\laravel\framework\src\Illuminate\Auth\Middleware\Authenticate.php
+
+    protected function redirectTo(Request $request)
+    {
+        if (static::$redirectToCallback) {
+            return call_user_func(static::$redirectToCallback, $request);
+        }
+    
+        $redirectUrl = $request->session()->get('url.intended');
+    
+        $request->session()->forget('url.intended');
+    
+        return $redirectUrl ?: '/';
+    }
+
+-----------------------------------------------------------------------
+
+\vendor\munafio\chatify\src\Http\Controllers\MessagesController.php
+
+in this function public function search(Request $request)
+this changes
+
+$records = User::where('id','!=',Auth::user()->id)->whereNotNull('email_verified_at')
+                    ->where('name', 'LIKE', "%{$input}%")
+                    ->paginate($request->per_page ?? $this->perPage);
