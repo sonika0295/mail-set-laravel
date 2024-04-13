@@ -18,9 +18,8 @@ Route::get('/clear-cache', function () {
 Route::controller(HomeController::class)->group(function () {
     Route::get('/', 'index')->name('home');
     Route::get('/buy', 'buy')->name('buy');
-    Route::get('/sell', 'sell')->name('sell');
+
     Route::get('/request', 'request')->name('request');
-    Route::get('/setting', 'setting')->name('setting');
     Route::get('/contact',  'contact');
     Route::get('/signup',  'signup')->name('signup');
     Route::post('/signup',  'signupSubmit')->name('signup.submit');
@@ -29,13 +28,25 @@ Route::controller(HomeController::class)->group(function () {
     Route::post('/email/resend', 'resend')->name('email.resend');
     Route::get('/login', 'login')->name('login');
     Route::post('/login', 'loginSubmit')->name('login.submit');
-    Route::get('/logout', 'logout')->name('logout');
-    Route::post('/setting', 'settingUpdate')->name('setting.update');
+
+    Route::middleware('auth')->group(function () {
+        Route::get('/sell', 'sell')->name('sell');
+        Route::get('/setting', 'setting')->name('setting');
+        Route::post('/setting', 'settingUpdate')->name('setting.update');
+        Route::get('/logout', 'logout')->name('logout');
+    });
 });
 
 Route::controller(SellerController::class)->group(function () {
-    Route::post('/sell', 'sellItemAdd')->name('sell.submit');
-    Route::get('item/detail/{slug}', 'sellItemDetails')->name('item.detail');
+    Route::middleware('auth')->group(function () {
+
+        Route::get('/sell/add', 'sellItemAddForm')->name('sell.add');
+        Route::post('/sell/add', 'sellItemAdd')->name('sell.add.submit');
+        Route::get('/sell/edit/{id}', 'SellEdit')->name('sell.edit');
+        Route::post('/sell/update', 'SellUpdate')->name('sell.update');
+        Route::delete('/sell/{id}/delete', 'SellDelete')->name('sell.delete');
+        Route::get('item/detail/{slug}', 'sellItemDetails')->name('item.detail');
+    });
 });
 
 

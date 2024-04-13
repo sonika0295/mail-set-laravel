@@ -4,7 +4,10 @@
     <div class="container-fluid">
         <div class="container-fluid gtco-news" id="news">
             <div class="container">
-                <h2>Sell Your Item</h2>
+
+
+                <h2>Sell Item Add</h2>
+
 
                 @if (session('success'))
                     <div class="alert alert-success" role="alert">
@@ -18,8 +21,8 @@
                     </div>
                 @endif
 
-                <form action="{{ route('sell.submit') }}" method="post" style="box-shadow:0 0 10px  lightgrey" class="p-4"
-                    enctype="multipart/form-data">
+                <form action="{{ route('sell.add.submit') }}" method="post" style="box-shadow:0 0 10px  lightgrey"
+                    class="p-4" enctype="multipart/form-data">
                     @csrf
 
                     <div class="from-group  row  mt-3">
@@ -135,4 +138,3 @@
         }
     </style>
 @endpush
-

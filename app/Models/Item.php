@@ -26,4 +26,9 @@ class Item extends Model
 
         return $query->limit(8)->get();
     }
+
+    public function getStatusAttribute($value)
+    {
+        return $value == 1 ? 'Active' : 'Disabled';
+    }
 }

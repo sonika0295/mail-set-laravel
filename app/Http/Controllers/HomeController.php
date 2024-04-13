@@ -65,12 +65,15 @@ class HomeController extends Controller
     {
         return view('pages.buy');
     }
+
     public function sell()
     {
         $categories = Category::whereStatus('1')->get();
+        $items = Item::whereUserId(Auth::id())->orderByDesc('id')->paginate(5);
 
-        return view('pages.sell', compact('categories'));
+        return view('pages.sell.sell', compact('categories', 'items'));
     }
+
     public function request()
     {
         return view('pages.request');
